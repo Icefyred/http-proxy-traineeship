@@ -17,7 +17,7 @@ public class HttpServerProxy {
 
 			if (didItConnect(serverSocket, clientSocket)) {
 				RequestHandler requestHandler = new RequestHandler();
-				requestHandler.request();
+				requestHandler.request(clientSocket);
 			}
 
 		} catch (Exception ex) {
