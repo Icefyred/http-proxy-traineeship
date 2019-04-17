@@ -7,31 +7,35 @@ public class HttpServerProxy {
 	private int portNumber;
 	private ServerSocket serverSocket;
 
-	public void listening() {
-		try {
-			System.out.println("Listening on port " + portNumber); // prints in the console what's stated in inverted
-																	// commas
-
-			Socket clientSocket = serverSocket.accept(); // call to accept() blocks until it receives an incoming client
-															// request
-
-			RequestHandler requestHandler = new RequestHandler(); // instantiation of the RequestHandler class
-			requestHandler.request(clientSocket); // call of the request() method from the RequestHandler class
-
-		} catch (Exception ex) {
-			System.err.println(ex.getMessage()); // prints in the console the error occured
-		}
-
-	}
-
 	public HttpServerProxy(int portNumber) { // constructor of the HttpServerProxy class
 		this.portNumber = portNumber;
 		try {
-			serverSocket = new ServerSocket(portNumber);// definition of the port connection to the
-			// server
-		} catch (Exception ex) {// if the port is either occupied or any other type of error occurs, this procs
+			// starts the server socket bound to the port number
+			serverSocket = new ServerSocket(portNumber);
+
+			System.out.println("Started on port " + portNumber);
+			// if the port is either occupied or any other type of error occurs, this procs
+		} catch (Exception ex) {
 			throw new RuntimeException(ex.getMessage(), ex);
 		}
 
 	}
+
+	public void listening() {
+		try {
+			// call to accept() blocks until it receives an incoming client request
+			Socket clientSocket = serverSocket.accept();
+
+			// instantiation of the RequestHandler class
+			RequestHandler requestHandler = new RequestHandler();
+			// call of the request() method from the RequestHandler class
+			requestHandler.request(clientSocket);
+
+		} catch (Exception ex) {
+			// prints in the console the error occured
+			System.err.println(ex.getMessage());
+		}
+
+	}
+
 }
