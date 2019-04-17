@@ -9,7 +9,6 @@ public class HttpServerProxy {
 
 	public void listening() {
 		try {
-
 			System.out.println("Listening on port " + portNumber); // prints in the console what's stated in inverted
 																	// commas
 
