@@ -18,11 +18,7 @@ public class RequestHandler {
 		String methodFromRequest = parseRequestMethod(requestLine);
 		String uriFromRequest = parseRequestUri(requestLine);
 
-		if (!(uriFromRequest.substring(0, 6).equals("http://"))) {
-			uriFromRequest = "http://" + uriFromRequest;
-		} else if (!(uriFromRequest.substring(0, 7).equals("https://"))) {
-			uriFromRequest = "https://" + uriFromRequest;
-		}
+		uriFromRequest = prependHttpProtocolIfNeeded(uriFromRequest);
 
 		if (methodFromRequest.equals("GET")) {
 			HttpClient client = HttpClientBuilder.create().build();
@@ -31,13 +27,35 @@ public class RequestHandler {
 		}
 	}
 
+	private String prependHttpProtocolIfNeeded(String uriFromRequest) {
+		String auxForHttpsProtocol = uriFromRequest.substring(0, 5);
+		String auxForHttpProtocol = uriFromRequest.substring(0, 4);
+
+		if (!doesItContainHttpProtocol(uriFromRequest, auxForHttpsProtocol, auxForHttpProtocol)) {
+			uriFromRequest = "http://" + uriFromRequest;
+		}
+		return uriFromRequest;
+	}
+
+	private boolean doesItContainHttpProtocol(String uri, String auxForHttpsProtocol, String auxForHttpProtocol) {
+		if (!auxForHttpsProtocol.equals("https") && !auxForHttpProtocol.equals("http")) {
+			return false;
+		}
+		return true;
+	}
+
 	public String parseRequestMethod(String stringToExtract) {
-		String[] arrString = stringToExtract.split(" ");
+		String[] arrString = splitRequestLine(stringToExtract);
 		return arrString[0];
 	}
 
-	public String parseRequestUri(String stringToExtract) {
+	private String[] splitRequestLine(String stringToExtract) {
 		String[] arrString = stringToExtract.split(" ");
+		return arrString;
+	}
+
+	public String parseRequestUri(String stringToExtract) {
+		String[] arrString = splitRequestLine(stringToExtract);
 		return arrString[1];
 	}
 }
