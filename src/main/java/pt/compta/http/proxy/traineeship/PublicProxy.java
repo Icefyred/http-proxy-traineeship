@@ -23,18 +23,18 @@ public class PublicProxy {
 	public void forward(String urlToForward) {
 		System.out.println("Connected to " + urlToForward);
 		try {
-			URL obj = new URL(urlToForward);
-			HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
+			URL objToUseToRedirect = new URL(urlToForward);
+			HttpURLConnection connection = (HttpURLConnection) objToUseToRedirect.openConnection();
 
-			BufferedReader input = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			BufferedReader input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
-			StringBuilder stringBuilder = new StringBuilder();
+			StringBuilder streamWithResultOfConnection = new StringBuilder();
 
 			String line = null;
 			while ((line = input.readLine()) != null) {
-				stringBuilder.append(line + "\n");
+				streamWithResultOfConnection.append(line + "\n");
 			}
-			System.out.println(stringBuilder);
+			System.out.println(streamWithResultOfConnection);
 			input.close();
 
 		} catch (Exception ex) {
