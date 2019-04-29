@@ -3,18 +3,18 @@ package pt.compta.http.proxy.traineeship;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.URL;
 
 public class PublicProxy {
 	private int publicProxyPort;
-	private ServerSocket serverSocket;
+	private Socket clientSocket;
 
-	public PublicProxy(int portNumber) {
+	public PublicProxy(String hostName, int portNumber) {
 		this.publicProxyPort = portNumber;
 		try {
-			serverSocket = new ServerSocket(publicProxyPort);
-			System.out.println("Public Proxy started on port..." + publicProxyPort);
+			clientSocket = new Socket(hostName, publicProxyPort);
+			System.out.println("Public Proxy started on port " + publicProxyPort);
 		} catch (Exception ex) {
 			System.err.println(ex.getMessage());
 		}
@@ -32,9 +32,10 @@ public class PublicProxy {
 
 			String line = null;
 			while ((line = input.readLine()) != null) {
-				streamWithResultOfConnection.append(line + "\n");
+				streamWithResultOfConnection.append(line);
 			}
-			System.out.println(streamWithResultOfConnection);
+			// TODO mandar de volta o result do streamWithResultOfConnection para o proxy
+			// System.out.println(streamWithResultOfConnection); //debug purpose
 			input.close();
 
 		} catch (Exception ex) {
@@ -46,5 +47,4 @@ public class PublicProxy {
 	// inicializar para um proxy (check)
 	// sendMessage(stream) (check)
 }
-
 // http://www.sohu.com/

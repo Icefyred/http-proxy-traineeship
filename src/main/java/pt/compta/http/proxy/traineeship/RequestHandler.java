@@ -8,20 +8,15 @@ import java.net.Socket;
 public class RequestHandler {
 
 	public void request(Socket clientSocket) throws IOException {
-		int publicPortNumber = 8081;
+		int publicPortNumber = 3128;
+		String hostName = "proxy.compta.pt";
 		BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		String requestLine = input.readLine();
 
 		String uriFromRequest = parseRequestUri(requestLine);
 
-		PublicProxy publicProxy = new PublicProxy(publicPortNumber);
+		PublicProxy publicProxy = new PublicProxy(hostName, publicPortNumber);
 		publicProxy.forward(uriFromRequest);
-
-		/*
-		 * //abrir socket para proxy public //socket para host e port //após seja bem
-		 * sucedido pedir um request
-		 * 
-		 */
 	}
 
 	private String[] splitRequestLine(String stringToExtract) {
