@@ -26,17 +26,17 @@ public class PublicProxy {
 			URL objToUseToRedirect = new URL(urlToForward);
 			HttpURLConnection connection = (HttpURLConnection) objToUseToRedirect.openConnection();
 
-			BufferedReader input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			BufferedReader inputStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
-			StringBuilder streamWithResultOfConnection = new StringBuilder();
+			StringBuilder streamWithResultFromConnection = new StringBuilder();
 
-			String line = null;
-			while ((line = input.readLine()) != null) {
-				streamWithResultOfConnection.append(line);
+			String auxStream = null;
+			while ((auxStream = inputStream.readLine()) != null) {
+				streamWithResultFromConnection.append(auxStream);
 			}
 			// TODO mandar de volta o result do streamWithResultOfConnection para o proxy
 			// System.out.println(streamWithResultOfConnection); //debug purpose
-			input.close();
+			inputStream.close();
 
 		} catch (Exception ex) {
 			System.err.println(ex.getMessage());
