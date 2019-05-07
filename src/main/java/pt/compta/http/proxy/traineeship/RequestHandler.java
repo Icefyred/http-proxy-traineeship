@@ -16,15 +16,20 @@ public class RequestHandler {
 		String uriFromRequest = parseRequestUri(requestLine);
 
 		PublicProxy publicProxy = new PublicProxy(hostName, publicPortNumber);
-		publicProxy.forward(uriFromRequest);
+		publicProxy.forwardHttpRequestToPublicProxy(uriFromRequest);
 	}
 
 	private String[] splitRequestLine(String stringToExtract) {
 		return stringToExtract.split(" ");
 	}
 
-	public String parseRequestUri(String stringToExtract) {
+	private String parseRequestUri(String stringToExtract) {
 		String[] arrString = splitRequestLine(stringToExtract);
 		return arrString[1];
+	}
+
+	private String parseRequestMethod(String stringToExtract) {
+		String[] arrString = splitRequestLine(stringToExtract);
+		return arrString[0];
 	}
 }

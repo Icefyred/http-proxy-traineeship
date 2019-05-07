@@ -20,7 +20,7 @@ public class PublicProxy {
 		}
 	}
 
-	public void forward(String urlToForward) {
+	public void forwardHttpRequestToPublicProxy(String urlToForward) {
 		System.out.println("Connected to " + urlToForward);
 		try {
 			URL objToUseToRedirect = new URL(urlToForward);
@@ -29,22 +29,18 @@ public class PublicProxy {
 			BufferedReader inputStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
 			StringBuilder streamWithResultFromConnection = new StringBuilder();
-
 			String auxStream = null;
+
 			while ((auxStream = inputStream.readLine()) != null) {
 				streamWithResultFromConnection.append(auxStream);
 			}
-			// TODO mandar de volta o result do streamWithResultOfConnection para o proxy
-			// System.out.println(streamWithResultOfConnection); //debug purpose
 			inputStream.close();
 
 		} catch (Exception ex) {
 			System.err.println(ex.getMessage());
 		}
 	}
-
-	// TODO: Choose from a list a random and open Public Proxy to use
-	// inicializar para um proxy (check)
-	// sendMessage(stream) (check)
 }
+// TODO: mandar de volta o result do streamWithResultOfConnection para o proxy
+// TODO: Choose from a list, a random and open Public Proxy to use
 // http://www.sohu.com/

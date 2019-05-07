@@ -2,13 +2,19 @@ package pt.compta.http.proxy.traineeship;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Scanner;
 
-public class HttpServerProxy {
+public class HttpServerProxy implements Runnable {
 	private int portNumber;
 	private ServerSocket serverSocket;
+	static ArrayList<Thread> servicingThreads;
+	private boolean running; // Control unit
 
 	public HttpServerProxy(int portNumber) { // constructor of the HttpServerProxy class
 		this.portNumber = portNumber;
+		servicingThreads = new ArrayList<>();
+		new Thread(this).start();
 		try {
 			// starts the server socket bound to the port number
 			serverSocket = new ServerSocket(portNumber);
@@ -38,4 +44,41 @@ public class HttpServerProxy {
 
 	}
 
+	@Override
+	public void run() {
+		Scanner scanner = new Scanner(System.in);
+
+		String command;
+		while (running) {
+			command = scanner.nextLine();
+			if (command.equalsIgnoreCase("close") || command.equalsIgnoreCase("f")) {
+				running = false;
+				closeServer();
+			}
+		}
+		scanner.close();
+	}
+
+	private void closeServer() {
+		try {
+			// Close all servicing threads
+			for (Thread thread : servicingThreads) {
+				if (thread.isAlive()) {
+					System.out.print("Waiting on " + thread.getId() + " to close..");
+					thread.join();
+					System.out.println(" closed");
+				}
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		// Close server Socket
+		try {
+			System.out.println("Terminating Connection");
+			serverSocket.close();
+		} catch (Exception e) {
+			System.out.println("Exception closing proxy's server socket");
+			e.printStackTrace();
+		}
+	}
 }
