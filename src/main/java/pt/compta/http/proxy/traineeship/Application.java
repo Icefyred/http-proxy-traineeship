@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Application {
 	// constant to define which port the server will be using
-	private static final int PORT_NUMBER = 8080;
+	private static final int PORT_NUMBER = 8081;
 
 	private boolean running = true;
 

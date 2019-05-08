@@ -67,6 +67,7 @@ public class HttpServerProxy implements Runnable {
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+
 		}
 		// Close server Socket
 		try {

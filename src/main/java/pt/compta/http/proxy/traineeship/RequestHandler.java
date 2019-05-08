@@ -1,12 +1,12 @@
 package pt.compta.http.proxy.traineeship;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.Socket;
 
 public class RequestHandler implements Runnable {
 
 	private final Socket clientSocket;
+	private Shovel shovelInput = null;
+	private Shovel shovelOutput = null;
 
 	public RequestHandler(Socket clientSocket) {
 		this.clientSocket = clientSocket;
@@ -24,16 +24,20 @@ public class RequestHandler implements Runnable {
 	@Override
 	public void run() {
 		try {
-			int publicPortNumber = 3128;
-			String hostName = "proxy.compta.pt";
-
-			BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			String requestLine = input.readLine();
-
-			String uriFromRequest = parseRequestUri(requestLine);
-
+			int publicPortNumber = 8080;
+			String hostName = "188.166.54.103";
 			PublicProxy publicProxy = new PublicProxy(hostName, publicPortNumber);
-			publicProxy.forwardHttpRequestToPublicProxy(uriFromRequest);
+
+			shovelInput = new Shovel(clientSocket.getInputStream(), publicProxy.getOutputStream());
+			shovelOutput = new Shovel(publicProxy.getInputStream(), clientSocket.getOutputStream());
+
+			new Thread(shovelInput).start();
+			new Thread(shovelOutput).start();
+
+			while (true) {
+
+			}
+
 		} catch (Exception ex) {
 			throw new RuntimeException(ex.getMessage(), ex);
 		}
