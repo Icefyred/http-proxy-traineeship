@@ -1,22 +1,15 @@
 package pt.compta.http.proxy.traineeship;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-public class RequestHandler {
+public class RequestHandler implements Runnable {
 
-	public void request(Socket clientSocket) throws IOException {
-		int publicPortNumber = 3128;
-		String hostName = "proxy.compta.pt";
-		BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-		String requestLine = input.readLine();
+	private final Socket clientSocket;
 
-		String uriFromRequest = parseRequestUri(requestLine);
-
-		PublicProxy publicProxy = new PublicProxy(hostName, publicPortNumber);
-		publicProxy.forwardHttpRequestToPublicProxy(uriFromRequest);
+	public RequestHandler(Socket clientSocket) {
+		this.clientSocket = clientSocket;
 	}
 
 	private String[] splitRequestLine(String stringToExtract) {
@@ -28,8 +21,21 @@ public class RequestHandler {
 		return arrString[1];
 	}
 
-	private String parseRequestMethod(String stringToExtract) {
-		String[] arrString = splitRequestLine(stringToExtract);
-		return arrString[0];
+	@Override
+	public void run() {
+		try {
+			int publicPortNumber = 3128;
+			String hostName = "proxy.compta.pt";
+
+			BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			String requestLine = input.readLine();
+
+			String uriFromRequest = parseRequestUri(requestLine);
+
+			PublicProxy publicProxy = new PublicProxy(hostName, publicPortNumber);
+			publicProxy.forwardHttpRequestToPublicProxy(uriFromRequest);
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage(), ex);
+		}
 	}
 }

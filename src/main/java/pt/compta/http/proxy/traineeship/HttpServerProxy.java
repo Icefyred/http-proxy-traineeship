@@ -3,18 +3,16 @@ package pt.compta.http.proxy.traineeship;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class HttpServerProxy implements Runnable {
-	private int portNumber;
+
 	private ServerSocket serverSocket;
 	static ArrayList<Thread> servicingThreads;
-	private boolean running; // Control unit
+	private boolean running = true; // Control unit
 
 	public HttpServerProxy(int portNumber) { // constructor of the HttpServerProxy class
-		this.portNumber = portNumber;
+
 		servicingThreads = new ArrayList<>();
-		new Thread(this).start();
 		try {
 			// starts the server socket bound to the port number
 			serverSocket = new ServerSocket(portNumber);
@@ -28,38 +26,36 @@ public class HttpServerProxy implements Runnable {
 	}
 
 	public void listening() {
-		try {
-			// call to accept() blocks until it receives an incoming client request
-			Socket clientSocket = serverSocket.accept();
-
-			// instantiation of the RequestHandler class
-			RequestHandler requestHandler = new RequestHandler();
-			// call of the request() method from the RequestHandler class
-			requestHandler.request(clientSocket);
-
-		} catch (Exception ex) {
-			// prints in the console the error occured
-			System.err.println(ex.getMessage());
-		}
-
+		System.out.println("Listening...");
+		new Thread(this).start();
 	}
 
 	@Override
 	public void run() {
-		Scanner scanner = new Scanner(System.in);
-
-		String command;
 		while (running) {
-			command = scanner.nextLine();
-			if (command.equalsIgnoreCase("close") || command.equalsIgnoreCase("f")) {
-				running = false;
-				closeServer();
+			try {
+				// call to accept() blocks until it receives an incoming client request
+				Socket clientSocket = serverSocket.accept();
+
+				// instantiation of the RequestHandler class as a Thread
+				Thread requestHandler = new Thread(new RequestHandler(clientSocket));
+
+				// Adding thread to list of servicing threads
+				servicingThreads.add(requestHandler);
+
+				requestHandler.start();
+
+			} catch (Exception ex) {
+				// prints in the console the error occured
+				System.err.println(ex.getMessage());
 			}
 		}
-		scanner.close();
 	}
 
-	private void closeServer() {
+	void closeServer() {
+		System.out.println("Terminating HttpServer");
+		running = false;
+
 		try {
 			// Close all servicing threads
 			for (Thread thread : servicingThreads) {
