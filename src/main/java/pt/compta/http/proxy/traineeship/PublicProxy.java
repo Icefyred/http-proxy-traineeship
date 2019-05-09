@@ -1,7 +1,6 @@
 package pt.compta.http.proxy.traineeship;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -23,18 +22,29 @@ public class PublicProxy {
 		}
 	}
 
-	public InputStream getInputStream() throws IOException {
-		return clientSocket.getInputStream();
+	public InputStream getInputStream() {
+		try {
+			return clientSocket.getInputStream();
+		} catch (Exception ex) {
+			System.err.println(ex.getMessage());
+			return null;
+		}
 	}
 
-	public OutputStream getOutputStream() throws IOException {
-		return clientSocket.getOutputStream();
+	public OutputStream getOutputStream() {
+		try {
+			return clientSocket.getOutputStream();
+		} catch (Exception ex) {
+			System.err.println(ex.getMessage());
+			return null;
+		}
 	}
 
 	public void forwardHttpRequestToPublicProxy(String urlToForward, OutputStream clientStream) {
 		System.out.println("Connected to " + urlToForward);
 		try {
 			URL objToUseToRedirect = new URL(urlToForward);
+
 			HttpURLConnection connection = (HttpURLConnection) objToUseToRedirect.openConnection();
 
 			BufferedReader inputStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -45,6 +55,5 @@ public class PublicProxy {
 		}
 	}
 }
-// TODO: mandar de volta o result do streamWithResultOfConnection para o proxy
 // TODO: Choose from a list, a random and open Public Proxy to use
 // http://www.sohu.com/

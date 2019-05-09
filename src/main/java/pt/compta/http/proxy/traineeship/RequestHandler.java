@@ -21,6 +21,11 @@ public class RequestHandler implements Runnable {
 		return arrString[1];
 	}
 
+	private String parseRequestMethod(String stringToExtract) {
+		String[] arrString = splitRequestLine(stringToExtract);
+		return arrString[0];
+	}
+
 	@Override
 	public void run() {
 		try {
@@ -34,10 +39,9 @@ public class RequestHandler implements Runnable {
 			new Thread(shovelInput).start();
 			new Thread(shovelOutput).start();
 
-			while (true) {
-
+			if (publicProxy.getInputStream() == null) {
+				clientSocket.close();
 			}
-
 		} catch (Exception ex) {
 			throw new RuntimeException(ex.getMessage(), ex);
 		}
