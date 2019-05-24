@@ -1,5 +1,6 @@
 package pt.compta.http.proxy.traineeship;
 
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 public class RequestHandler implements Runnable {
@@ -12,38 +13,23 @@ public class RequestHandler implements Runnable {
 		this.clientSocket = clientSocket;
 	}
 
-	private String[] splitRequestLine(String stringToExtract) {
-		return stringToExtract.split(" ");
-	}
-
-	private String parseRequestUri(String stringToExtract) {
-		String[] arrString = splitRequestLine(stringToExtract);
-		return arrString[1];
-	}
-
-	private String parseRequestMethod(String stringToExtract) {
-		String[] arrString = splitRequestLine(stringToExtract);
-		return arrString[0];
-	}
-
 	@Override
 	public void run() {
+		OutputStreamWriter writer = null;
 		try {
 			int publicPortNumber = 8080;
-			String hostName = "188.166.54.103";
+			String hostName = "157.230.212.164";
 			PublicProxy publicProxy = new PublicProxy(hostName, publicPortNumber);
 
-			shovelInput = new Shovel(clientSocket.getInputStream(), publicProxy.getOutputStream());
-			shovelOutput = new Shovel(publicProxy.getInputStream(), clientSocket.getOutputStream());
+			shovelInput = new Shovel(this.clientSocket.getInputStream(), publicProxy.getOutputStream());
+			shovelOutput = new Shovel(publicProxy.getInputStream(), this.clientSocket.getOutputStream());
 
 			new Thread(shovelInput).start();
 			new Thread(shovelOutput).start();
 
-			if (publicProxy.getInputStream() == null) {
-				clientSocket.close();
-			}
 		} catch (Exception ex) {
 			throw new RuntimeException(ex.getMessage(), ex);
 		}
 	}
 }
+//TODO: Allow https requests

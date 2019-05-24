@@ -8,9 +8,10 @@ public class HttpServerProxy implements Runnable {
 
 	private ServerSocket serverSocket;
 	static ArrayList<Thread> servicingThreads;
-	private boolean running = true; // Control unit
+	// Control unit
+	private boolean running = true;
 
-	public HttpServerProxy(int portNumber) { // constructor of the HttpServerProxy class
+	public HttpServerProxy(int portNumber) {
 
 		servicingThreads = new ArrayList<>();
 		try {
@@ -37,16 +38,15 @@ public class HttpServerProxy implements Runnable {
 				// call to accept() blocks until it receives an incoming client request
 				Socket clientSocket = serverSocket.accept();
 
-				// instantiation of the RequestHandler class as a Thread
 				Thread requestHandler = new Thread(new RequestHandler(clientSocket));
 
 				// Adding thread to list of servicing threads
 				servicingThreads.add(requestHandler);
 
 				requestHandler.start();
-
 			} catch (Exception ex) {
-				// prints in the console the error occured
+				// when the closeServer() is triggered, meaning "exit" is written at the CLI
+				// this occurs
 				System.err.println(ex.getMessage());
 			}
 		}
