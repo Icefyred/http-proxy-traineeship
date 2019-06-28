@@ -30,7 +30,7 @@ public class Application {
 				proxy.closeServer();
 				running = false;
 			} else {
-				System.out.println("Command not found! If you're trying to shutdown, I suggest writing \"exit\"");
+				System.out.println("Command not found! If you're trying to shut down, I suggest writing \"exit\"");
 			}
 		}
 		input.close();

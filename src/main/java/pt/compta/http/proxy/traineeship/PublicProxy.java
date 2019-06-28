@@ -6,19 +6,10 @@ import java.net.Socket;
 
 public class PublicProxy {
 	private int publicProxyPort;
-	// private SSLSocket clientSSLSocket;
 	private Socket clientSocket;
 
 	public PublicProxy(String hostName, int portNumber) {
 		this.publicProxyPort = portNumber;
-
-		/*
-		 * try { SSLSocketFactory factory = (SSLSocketFactory)
-		 * SSLSocketFactory.getDefault(); clientSSLSocket = (SSLSocket)
-		 * factory.createSocket(hostName, publicProxyPort);
-		 * clientSSLSocket.startHandshake(); } catch (Exception ex) {
-		 * System.out.println("Could not create ssl socket"); }
-		 */
 
 		try {
 			clientSocket = new Socket(hostName, publicProxyPort);

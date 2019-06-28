@@ -1,6 +1,5 @@
 package pt.compta.http.proxy.traineeship;
 
-import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 public class RequestHandler implements Runnable {
@@ -15,10 +14,9 @@ public class RequestHandler implements Runnable {
 
 	@Override
 	public void run() {
-		OutputStreamWriter writer = null;
 		try {
 			int publicPortNumber = 8080;
-			String hostName = "157.230.212.164";
+			String hostName = "142.4.204.85";
 			PublicProxy publicProxy = new PublicProxy(hostName, publicPortNumber);
 
 			shovelInput = new Shovel(this.clientSocket.getInputStream(), publicProxy.getOutputStream());
@@ -29,7 +27,10 @@ public class RequestHandler implements Runnable {
 
 		} catch (Exception ex) {
 			throw new RuntimeException(ex.getMessage(), ex);
-		}
+		} /*
+			 * finally { try { if (clientSocket != null) { clientSocket.close(); } } catch
+			 * (IOException ex) { } }
+			 */
 	}
 }
 //TODO: Allow https requests

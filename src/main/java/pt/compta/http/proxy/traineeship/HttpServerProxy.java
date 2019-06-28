@@ -45,8 +45,6 @@ public class HttpServerProxy implements Runnable {
 
 				requestHandler.start();
 			} catch (Exception ex) {
-				// when the closeServer() is triggered, meaning "exit" is written at the CLI
-				// this occurs
 				System.err.println(ex.getMessage());
 			}
 		}
